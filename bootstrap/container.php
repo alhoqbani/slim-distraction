@@ -5,7 +5,8 @@ $container = $app->getContainer();
 
 $container['services'] = function ($c) {
     return new App\Services\ServiceFactory(
-        new \GuzzleHttp\Client()
+        new \GuzzleHttp\Client(),
+        $c->cache
     );
 };
 

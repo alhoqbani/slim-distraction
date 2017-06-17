@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Cache\CacheInterface;
 use App\Transformers\HackerNewsTransformer;
 use App\Transformers\ProdcutHuntTransformer;
 use App\Transformers\RedditTransformer;
@@ -20,16 +21,22 @@ class ServiceFactory
         'producthunt',
         'hackernews',
     ];
+    /**
+     * @var \App\Cache\CacheInterface
+     */
+    private $cache;
     
     
     /**
      * ServiceFactory constructor.
      *
-     * @param \GuzzleHttp\Client $client
+     * @param \GuzzleHttp\Client        $client
+     * @param \App\Cache\CacheInterface $cache
      */
-    public function __construct(Client $client)
+    public function __construct(Client $client, CacheInterface $cache)
     {
         $this->client = $client;
+        $this->cache = $cache;
     }
     
     public function get($service, $limit = 10)
@@ -39,28 +46,35 @@ class ServiceFactory
                 $this->{$service}($limit)
             );
         }
+        
         return [];
     }
     
     protected function hackernews($limit = 10)
     {
-        $data = (new HackerNews($this->client))->get($limit);
+        $data = $this->cache->remember('hackernews', 10, function () use ($limit) {
+            return json_encode((new HackerNews($this->client))->get($limit));
+        });
         
-        return (new HackerNewsTransformer($data))->create();
+        return (new HackerNewsTransformer(json_decode($data)))->create();
     }
     
     protected function reddit($limit = 10)
     {
-        $data = (new Reddit($this->client))->get($limit);
+        $data = $this->cache->remember('reddit', 10, function () use ($limit) {
+            return json_encode((new Reddit($this->client))->get($limit));
+        });
         
-        return (new RedditTransformer($data))->create();
+        return (new RedditTransformer(json_decode($data)))->create();
     }
     
     protected function producthunt($limit = 10)
     {
-        $data = (new ProductHunt($this->client))->get($limit);
+        $data = $this->cache->remember('producthunt', 10, function () use ($limit) {
+            return json_encode((new ProductHunt($this->client))->get($limit));
+        });
         
-        return (new ProdcutHuntTransformer($data))->create();
+        return (new ProdcutHuntTransformer(json_decode($data)))->create();
     }
     
     public function sortResponseByTimeStamp(array $data)

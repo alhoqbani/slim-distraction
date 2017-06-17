@@ -17,7 +17,6 @@ class NewsController extends BaseController
     
     public function show(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        dump($this->cache);
         $service = $this->services->get($args['service']);
         
         return $response->withJson($service);
