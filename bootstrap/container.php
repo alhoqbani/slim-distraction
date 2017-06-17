@@ -9,6 +9,18 @@ $container['services'] = function ($c) {
     );
 };
 
+$container['cache'] = function ($c) {
+    $config = $c['settings']['cache']['connections']['redis'];
+    $client = new Predis\Client([
+        'scheme'   => $config['scheme'],
+        'host'     => $config['host'],
+        'port'     => $config['port'],
+        'passowrd' => $config['passowrd'] ?? null,
+    ]);
+    
+    return new \App\Cache\RedisAdapter($client);
+};
+
 $container['view'] = function ($c) {
     $config = $c['settings']['twig'];
     $view = new \Slim\Views\Twig(

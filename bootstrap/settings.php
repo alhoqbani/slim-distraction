@@ -3,9 +3,9 @@ return [
     'displayErrorDetails' => true,
     
     'app' => [
-      'name' => getenv('APP_NAME'),
-      'url' => getenv('APP_URL'),
-      'env' => getenv('APP_ENV'),
+        'name' => getenv('APP_NAME'),
+        'url'  => getenv('APP_URL'),
+        'env'  => getenv('APP_ENV'),
     ],
     
     'twig' => [
@@ -20,6 +20,17 @@ return [
         'port'     => getenv('DB_PORT'),
         'username' => getenv('DB_USERNAME'),
         'password' => getenv('DB_PASSWORD'),
-        'dbname' => getenv('DB_DATABASE'),
+        'dbname'   => getenv('DB_DATABASE'),
+    ],
+    'cache'    => [
+        'drivers'     => 'redis',
+        'connections' => [
+            'redis' => [
+                'scheme'   => 'tcp',
+                'host'     => getenv('REDIS_HOST'),
+                'port'     => getenv('REDIS_PORT'),
+                'passowrd' => getenv('REDIS_PASSWORD'),
+            ],
+        ],
     ],
 ];
