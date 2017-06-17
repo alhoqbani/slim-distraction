@@ -4,7 +4,9 @@ $container = $app->getContainer();
 
 
 $container['services'] = function ($c) {
-    return new App\Services\ServiceFactory();
+    return new App\Services\ServiceFactory(
+        new \GuzzleHttp\Client()
+    );
 };
 
 $container['view'] = function ($c) {

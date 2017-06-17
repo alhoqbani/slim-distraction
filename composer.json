@@ -7,7 +7,8 @@
     "require": {
         "slim/slim": "^3.8",
         "slim/twig-view": "^2.2",
-        "vlucas/phpdotenv": "^2.4"
+        "vlucas/phpdotenv": "^2.4",
+        "guzzlehttp/guzzle": "^6.2"
     },
     "autoload": {
         "psr-4": {
