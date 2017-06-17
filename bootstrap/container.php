@@ -2,6 +2,11 @@
 
 $container = $app->getContainer();
 
+
+$container['services'] = function ($c) {
+    return new App\Services\ServiceFactory();
+};
+
 $container['view'] = function ($c) {
     $config = $c['settings']['twig'];
     $view = new \Slim\Views\Twig(
