@@ -15,6 +15,12 @@ class ServiceFactory
      */
     private $client;
     
+    protected $enabledServices = [
+        'reddit',
+        'producthunt',
+        'hackernews',
+    ];
+    
     
     /**
      * ServiceFactory constructor.
@@ -28,11 +34,12 @@ class ServiceFactory
     
     public function get($service, $limit = 10)
     {
-        if (method_exists($this, $service)) {
+        if (method_exists($this, $service) && $this->serviceIsEnabled($service)) {
             return $this->sortResponseByTimeStamp(
                 $this->{$service}($limit)
             );
         }
+        return [];
     }
     
     protected function hackernews($limit = 10)
@@ -63,5 +70,10 @@ class ServiceFactory
         });
         
         return $data;
+    }
+    
+    protected function serviceIsEnabled($service)
+    {
+        return in_array($service, $this->enabledServices);
     }
 }
