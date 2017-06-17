@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Transformers\HackerNewsTransformer;
 use GuzzleHttp\Client;
 
 class ServiceFactory
@@ -32,6 +33,8 @@ class ServiceFactory
     
     protected function hackernews($limit = 10)
     {
-        return (new HackerNews($this->client))->get($limit);
+        $data =  (new HackerNews($this->client))->get($limit);
+        
+        return (new HackerNewsTransformer($data))->create();
     }
 }
